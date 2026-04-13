@@ -11,7 +11,7 @@ DATA_FILE = "books.json"
 BACKUP_FOLDER = "backups"
 LOG_FILE = "login_activity.txt"
 SALES_LOG_FILE = "sales_log.json"
-
+VENDOR_FILE = "vendor_orders.json"
 users_db = {
     "Kristel": "password",
     "Benjamin": "password",
@@ -223,6 +223,19 @@ def build_cart_data():
 
     return cart_items, cart_total, cart_count
 
+def ensure_vendor_file():
+    if not os.path.exists(VENDOR_FILE):
+        with open(VENDOR_FILE, "w", encoding="utf-8") as f:
+            json.dump([], f, indent=4)
+
+def load_vendor_orders():
+    ensure_vendor_file()
+    with open(VENDOR_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def save_vendor_orders(data):
+    with open(VENDOR_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
 
 @app.route("/")
 def home():
@@ -562,6 +575,54 @@ def restore_backup():
         total_revenue=total_revenue,
     )
 
+@app.route("/employee-vendor-order", methods=["GET", "POST"])
+def employee_vendor_order():
+    employee_name = session.get("employee_name", "Store Employee")
+    books = get_books()
+
+    if request.method == "POST":
+        vendor_name = request.form.get("vendor_name", "").strip()
+        book_id = request.form.get("book_id", "").strip()
+        quantity = request.form.get("quantity", "0").strip()
+
+        try:
+            book_id = int(book_id)
+            quantity = int(quantity)
+        except ValueError:
+            book_id = None
+            quantity = 0
+
+        selected_book = next((b for b in books if b["id"] == book_id), None)
+
+        if selected_book and quantity > 0:
+            orders = load_vendor_orders()
+
+            order = {
+                "vendor_name": vendor_name,
+                "book_title": selected_book["title"],
+                "quantity": quantity,
+                "status": "Pending",
+                "order_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "employee": employee_name
+            }
+
+            orders.append(order)
+            save_vendor_orders(orders)
+
+            return redirect(url_for("view_vendor_orders"))
+
+    return render_template("vendor_order.html", books=books)
+
+@app.route("/employee-vendor-orders")
+def view_vendor_orders():
+    employee_name = session.get("employee_name", "Store Employee")
+    orders = load_vendor_orders()
+
+    return render_template(
+        "vendor_orders.html",
+        orders=orders,
+        employee_name=employee_name
+    )
 
 if __name__ == "__main__":
     ensure_data_file()
