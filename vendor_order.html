@@ -1,0 +1,16 @@
+<h2>Create Vendor Order</h2>
+
+<form method="POST">
+    Vendor Name: <input type="text" name="vendor_name"><br><br>
+
+    Select Book:
+    <select name="book_id">
+        {% for book in books %}
+        <option value="{{ book.id }}">{{ book.title }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    Quantity: <input type="number" name="quantity"><br><br>
+
+    <button type="submit">Place Order</button>
+</form>
