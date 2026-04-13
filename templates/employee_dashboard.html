@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Employee Dashboard</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,19 +30,6 @@
         .employee-header h1 {
             margin: 0 0 8px 0;
             font-size: 42px;
-            font-weight: 700;
-        }
-
-        .employee-header p {
-            margin: 0 0 18px 0;
-            font-size: 18px;
-        }
-
-        .employee-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: center;
         }
 
         .employee-actions a,
@@ -51,87 +39,37 @@
             border: none;
             border-radius: 14px;
             padding: 12px 18px;
-            font-size: 16px;
             font-weight: 700;
             text-decoration: none;
             cursor: pointer;
         }
 
-        .employee-actions form {
-            margin: 0;
-        }
-
         .ribbon-bar {
             display: flex;
             gap: 8px;
-            align-items: center;
             flex-wrap: wrap;
             background: #edf0f6;
             border-radius: 18px;
             padding: 8px;
             margin-bottom: 18px;
-            border: 1px solid #dde6f7;
         }
 
         .ribbon-button {
-            display: inline-block;
             padding: 11px 16px;
-            background-color: transparent;
-            color: #1f3f8f;
-            text-decoration: none;
             border-radius: 14px;
-            font-size: 15px;
+            text-decoration: none;
+            color: #1f3f8f;
             font-weight: 600;
-            transition: 0.2s ease;
         }
 
-        .ribbon-button.active,
-        .ribbon-button:hover {
-            background-color: white;
-            color: #1b1d2e;
-        }
-
-        .success-banner {
-            background: #dff4df;
-            color: #246b2a;
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            font-weight: 700;
-            font-size: 15px;
-        }
-
-        .summary-row {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(180px, 240px));
-            gap: 14px;
-            margin-bottom: 18px;
-            justify-content: start;
-        }
-
-        .summary-card {
+        .ribbon-button:hover,
+        .ribbon-button.active {
             background: white;
-            border: 1px solid #d8e3fb;
-            border-radius: 16px;
-            padding: 16px 18px;
-        }
-
-        .summary-card h3 {
-            margin: 0 0 8px 0;
-            font-size: 15px;
-            color: #214fd1;
-        }
-
-        .summary-card p {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
-            color: #16325c;
         }
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 1.45fr 1fr;
+            grid-template-columns: 1.5fr 1fr;
             gap: 20px;
         }
 
@@ -142,201 +80,107 @@
             padding: 22px;
         }
 
-        .panel h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #214fd1;
-            font-size: 22px;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
         }
 
         th, td {
-            text-align: left;
-            padding: 13px 10px;
+            padding: 12px;
             border-bottom: 1px solid #d8e3fb;
-            font-size: 16px;
-        }
-
-        th {
-            color: #214fd1;
-            font-size: 17px;
-        }
-
-        label {
-            display: block;
-            font-size: 16px;
-            font-weight: 700;
-            color: #214fd1;
-            margin-bottom: 8px;
-            margin-top: 14px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 14px;
-            font-size: 15px;
-            border-radius: 12px;
-            border: 1px solid #8fb6ff;
-            box-sizing: border-box;
-            background: white;
         }
 
         .submit-button {
             width: 100%;
-            margin-top: 20px;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
+            margin-top: 15px;
+            padding: 12px;
             background: #2f64e0;
+            color: white;
             border: none;
             border-radius: 12px;
-            cursor: pointer;
-        }
-
-        .submit-button:hover {
-            background: #1f4fbf;
-        }
-
-        @media (max-width: 1050px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 700px) {
-            body {
-                padding: 14px;
-            }
-
-            .employee-header {
-                padding: 20px;
-            }
-
-            .employee-header h1 {
-                font-size: 32px;
-            }
-
-            .employee-header p {
-                font-size: 16px;
-            }
-
-            .summary-row {
-                grid-template-columns: 1fr;
-            }
-
-            .ribbon-button {
-                width: 100%;
-                text-align: center;
-            }
         }
     </style>
 </head>
+
 <body>
-    <div class="page-wrapper">
-        <div class="employee-header">
-            <h1>Employee Dashboard</h1>
-            <p>Signed in as {{ employee_name if employee_name else 'Store Employee' }}.</p>
+<div class="page-wrapper">
 
-            <div class="employee-actions">
-                <a href="/">Return to customer storefront</a>
+    <!-- HEADER -->
+    <div class="employee-header">
+        <h1>Employee Dashboard</h1>
+        <p>Signed in as {{ employee_name }}</p>
 
-                <form method="POST" action="/restore-backup">
-                    <input type="hidden" name="employee_name" value="{{ employee_name }}" />
-                    <button type="submit">Restore Latest Backup</button>
-                </form>
-            </div>
-        </div>
+        <div class="employee-actions">
+            <a href="/">Customer View</a>
 
-        <div class="ribbon-bar">
-            <a class="ribbon-button active" href="{{ url_for('employee_dashboard') }}">Dashboard</a>
-            <a class="ribbon-button" href="{{ url_for('employee_sales_log') }}">Sales</a>
-            <a class="ribbon-button" href="{{ url_for('employee_dashboard') }}">Inventory</a>
-            <a class="ribbon-button" href="{{ url_for('employee_add_sale') }}">Manual Sale</a>
-        </div>
-
-        {% if restock_message %}
-            <div class="success-banner">{{ restock_message }}</div>
-        {% endif %}
-
-        <div class="summary-row">
-            <div class="summary-card">
-                <h3>Total Orders</h3>
-                <p>{{ total_orders if total_orders is defined else 0 }}</p>
-            </div>
-            <div class="summary-card">
-                <h3>Total Revenue</h3>
-                <p>${{ "%.2f"|format(total_revenue if total_revenue is defined else 0) }}</p>
-            </div>
-        </div>
-
-        <div class="dashboard-grid">
-            <div class="panel">
-                <h2>Current Inventory Overview</h2>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Category</th>
-                            <th>Inventory</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for book in books %}
-                        <tr>
-                            <td>{{ book.title }}</td>
-                            <td>{{ book.author }}</td>
-                            <td>{{ book.category }}</td>
-                            <td>{{ book.inventory }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="panel">
-                <h2>Receive Invoice / Add Inventory</h2>
-
-                <form method="POST" action="/employee-restock">
-                    <input type="hidden" name="employee_name" value="{{ employee_name }}" />
-
-                    <label for="book_id">Select Book</label>
-                    <select name="book_id" id="book_id" required>
-                        {% for book in books %}
-                        <option value="{{ book.id }}">
-                            {{ book.title }} — current stock: {{ book.inventory }}
-                        </option>
-                        {% endfor %}
-                    </select>
-
-                    <label for="invoice_number">Invoice Number</label>
-                    <input
-                        type="text"
-                        id="invoice_number"
-                        name="invoice_number"
-                        placeholder="Enter invoice number"
-                    />
-
-                    <label for="quantity_received">Quantity Received</label>
-                    <input
-                        type="number"
-                        id="quantity_received"
-                        name="quantity_received"
-                        min="1"
-                        placeholder="Enter quantity received"
-                        required
-                    />
-
-                    <button class="submit-button" type="submit">Update Inventory</button>
-                </form>
-            </div>
+            <form method="POST" action="/restore-backup">
+                <input type="hidden" name="employee_name" value="{{ employee_name }}">
+                <button type="submit">Restore Backup</button>
+            </form>
         </div>
     </div>
+
+    <!-- NAVIGATION -->
+    <div class="ribbon-bar">
+        <a class="ribbon-button active" href="/employee-dashboard">Dashboard</a>
+        <a class="ribbon-button" href="/employee_sales_log">Sales</a>
+        <a class="ribbon-button" href="/employee_add_sale">Manual Sale</a>
+
+        <!-- NEW FEATURE -->
+        <a class="ribbon-button" href="/employee-vendor-order">Create Vendor Order</a>
+        <a class="ribbon-button" href="/employee-vendor-orders">View Vendor Orders</a>
+    </div>
+
+    <!-- SUMMARY -->
+    <div>
+        <h3>Total Orders: {{ total_orders }}</h3>
+        <h3>Total Revenue: ${{ total_revenue }}</h3>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="dashboard-grid">
+
+        <!-- INVENTORY -->
+        <div class="panel">
+            <h2>Inventory</h2>
+
+            <table>
+                <tr>
+                    <th>Title</th>
+                    <th>Stock</th>
+                </tr>
+
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.inventory }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- RESTOCK -->
+        <div class="panel">
+            <h2>Add Inventory</h2>
+
+            <form method="POST" action="/employee-restock">
+                <input type="hidden" name="employee_name" value="{{ employee_name }}">
+
+                <select name="book_id">
+                    {% for book in books %}
+                    <option value="{{ book.id }}">{{ book.title }}</option>
+                    {% endfor %}
+                </select>
+
+                <input type="text" name="invoice_number" placeholder="Invoice Number">
+                <input type="number" name="quantity_received" placeholder="Quantity">
+
+                <button class="submit-button">Update</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
 </body>
 </html>
